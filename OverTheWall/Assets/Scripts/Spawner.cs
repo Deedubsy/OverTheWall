@@ -36,6 +36,6 @@ public class Spawner : MonoBehaviour
 
     public void SpawnRandom()
     {
-        Instantiate(objects[Random.Range(0, objects.Length - 1)]);
+        //Instantiate(objects[Random.Range(0, objects.Length - 1)]);
     }
 }

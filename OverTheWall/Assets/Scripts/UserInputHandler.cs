@@ -1,49 +1,94 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class UserInputHandler : MonoBehaviour {
+public class UserInputHandler : MonoBehaviour
+{
+    Camera camera;
 
-    public delegate void TapAction(Touch t);
-    public static event TapAction OnTap;
+    public List<GameObject> touchList = new List<GameObject>();
+    private GameObject[] touchesOld;
 
-    public float tapMaxMovement = 50f;
+    // Use this for initialization
+    void Start()
+    {
+        camera = GetComponent<Camera>();
+    }
 
-    private Vector2 movement;
+    // Update is called once per frame
+    void Update()
+    {
 
-    private bool tapGestureFailed = false;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    if(Input.touchCount > 0)
+#if UNITY_EDITOR
+        if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
         {
-            Touch touch = Input.touches[0]; 
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
-            if(touch.phase == TouchPhase.Began)
+            if (Physics.Raycast(ray, out hit))
             {
-                movement = Vector2.zero;
-            }
-            else if(touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-            {
-                movement += touch.deltaPosition;
+                GameObject gameObject = hit.transform.gameObject;
 
-                if (movement.magnitude > tapMaxMovement)
-                    tapGestureFailed = true;
-            }
-            else
-            {
-                if(!tapGestureFailed)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (OnTap != null)
-                        OnTap(touch);
+                    gameObject.SendMessage("OnTouchDown", hit.point, SendMessageOptions.DontRequireReceiver);
                 }
-
-                tapGestureFailed = false;
+                if (Input.GetMouseButtonUp(0))
+                {
+                    gameObject.SendMessage("OnTouchUp", hit.point, SendMessageOptions.DontRequireReceiver);
+                }
+                if (Input.GetMouseButton(0))
+                {
+                    gameObject.SendMessage("OnTouchStay", hit.point, SendMessageOptions.DontRequireReceiver);
+                }
             }
         }
-	}
+#endif
+
+        if (Input.touchCount > 0)
+        {
+            touchesOld = new GameObject[touchList.Count];
+            touchList.CopyTo(touchesOld);
+            touchList.Clear();
+
+            foreach (var touch in Input.touches)
+            {
+                Ray ray = camera.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    GameObject gameObject = hit.transform.gameObject;
+
+                    touchList.Add(gameObject);
+
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        gameObject.SendMessage("OnTouchDown", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        gameObject.SendMessage("OnTouchUp", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                    if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
+                    {
+                        gameObject.SendMessage("OnTouchStay", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                    if (touch.phase == TouchPhase.Canceled)
+                    {
+                        gameObject.SendMessage("OnTouchExit", hit.point, SendMessageOptions.DontRequireReceiver);
+                    }
+                }
+            }
+
+            foreach (GameObject g in touchesOld)
+            {
+                if (!touchList.Contains(g))
+                {
+                    g.SendMessage("OnTouchExit", Vector3.zero, SendMessageOptions.DontRequireReceiver);
+                }
+            }
+        }
+
+    }
 }
