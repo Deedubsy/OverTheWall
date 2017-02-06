@@ -3,6 +3,10 @@ using System.Collections;
 
 public class CastleController : MonoBehaviour {
 
+    public Camera mainCamera;
+    public GameObject groundSpawner;
+    float castleMovementSpeed = 5.0f;
+
     private enum Movement
     {
         Left, 
@@ -12,23 +16,38 @@ public class CastleController : MonoBehaviour {
 
     Movement movement = Movement.Stationary;
 
+    void Start()
+    {
+        mainCamera = GetComponent<Camera>();
+    }
+
     // Update is called once per frame
     void Update () {
+        CheckMovement();
+    }
 
+    void CheckMovement()
+    {
         switch (movement)
         {
             case Movement.Left:
-                transform.position = new Vector3(transform.position.x - 5f * Time.deltaTime, transform.position.y);
+                Move(-1);
                 break;
             case Movement.Right:
-                transform.position = new Vector3(transform.position.x + 5f * Time.deltaTime, transform.position.y);
+                Move(1);
                 break;
             case Movement.Stationary:
                 break;
             default:
                 break;
         }
+    }
 
+    private void Move(int dir)
+    {
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x + (castleMovementSpeed * dir) * Time.deltaTime, mainCamera.transform.position.y);
+        transform.position = new Vector3(transform.position.x + (castleMovementSpeed * dir) * Time.deltaTime, transform.position.y);
+        groundSpawner.transform.position = new Vector3(groundSpawner.transform.position.x + (castleMovementSpeed * dir) * Time.deltaTime, groundSpawner.transform.position.y);
     }
 
     void OnLeftButtonTouchDown()
