@@ -77,7 +77,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Buttons\LeftButton.cs" />
     <Compile Include="Assets\Scripts\CastleController.cs" />
+    <Compile Include="Assets\Scripts\MoveLeft.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
+    <Compile Include="Assets\Scripts\TouchScript.cs" />
     <Compile Include="Assets\Scripts\UserInputHandler.cs" />
   </ItemGroup>
   <ItemGroup>
