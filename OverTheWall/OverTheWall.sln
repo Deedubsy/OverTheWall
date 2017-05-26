@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverTheWall.Plugins", "OverTheWall.Plugins.csproj", "{85309FE1-D0D6-1AD4-2277-984EBEA8F401}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverTheWall", "OverTheWall.csproj", "{A542EE4F-F50B-465E-EBCA-CD33E77CA99D}"

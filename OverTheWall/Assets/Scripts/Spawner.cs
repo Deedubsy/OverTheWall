@@ -4,11 +4,12 @@ using System.Collections;
 public class Spawner : MonoBehaviour
 {
 
-    public GameObject[] objects;
+    //public GameObject[] objects;
+    public GameObject testObject;
 
-    private float spawnerCountdown = 2.0f;
+    private float spawnerCountdown = 5.0f;
     private float gameTimer = 0.0f;
-    private float countdownMax = 5.0f;
+    private float countdownMax = 10.0f;
 
     // Use this for initialization
     void Start()
@@ -37,5 +38,7 @@ public class Spawner : MonoBehaviour
     public void SpawnRandom()
     {
         //Instantiate(objects[Random.Range(0, objects.Length - 1)]);
+
+        Instantiate(testObject, transform.position, new Quaternion());
     }
 }

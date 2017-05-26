@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TouchControlsKit;
 
 public class CastleController : MonoBehaviour {
 
     public Camera mainCamera;
     public GameObject groundSpawner;
     float castleMovementSpeed = 5.0f;
+    private bool moveLeftBtnState;
+    private bool moveRightBtnState;
+
 
     private enum Movement
     {
@@ -23,7 +27,26 @@ public class CastleController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        CheckMovement();
+
+        //float horizontal = TCKInput.GetAxis("MovementDPad", EAxisType.Horizontal);
+
+        //if (horizontal > 0)
+        //{
+        //    Move(1);
+        //}
+        //else if (horizontal < 0)
+        //{
+        //    Move(-1);
+        //}
+
+        //if(TCKInput.GetAction("Move_Right", EActionEvent.Down))
+        //{
+        //    Move(1);
+        //}
+        //else if (TCKInput.GetAction("Move_Left", EActionEvent.Down))
+        //{
+        //    Move(-1);
+        //}
     }
 
     void CheckMovement()
@@ -88,6 +111,15 @@ public class CastleController : MonoBehaviour {
     public void OnRightClickUp()
     {
         movement = Movement.Stationary;
+    }
+
+
+
+    //======================================NEW===============================
+
+    public void OnHit(float damage)
+    {
+        
     }
 
 }
