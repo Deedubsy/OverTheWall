@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : EnemyController
+public class SwordAndShield : EnemyController
 {
-    float EnemyHealth = 100;
+    float EnemyHealth = 150;
     float MovementSpeed = 2;
     float AttackSpeed = 2;
     float AttackRange = 1;
@@ -15,7 +15,7 @@ public class Sword : EnemyController
     // Use this for initialization
     void Start()
     {
-        Initialize(Enemy_Type.Sword, EnemyHealth, MovementSpeed, AttackSpeed, AttackRange, AttackDamage, AttackCooldown);
+        Initialize(Enemy_Type.SwordAndShield, EnemyHealth, MovementSpeed, AttackSpeed, AttackRange, AttackDamage, AttackCooldown);
     }
 
     // Update is called once per frame

@@ -86,7 +86,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Buttons\LeftButton.cs" />
     <Compile Include="Assets\Scripts\CastleController.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Archer.cs" />
     <Compile Include="Assets\Scripts\Enemies\Sword.cs" />
+    <Compile Include="Assets\Scripts\Enemies\SwordAndShield.cs" />
     <Compile Include="Assets\Scripts\EnemyBaseController.cs" />
     <Compile Include="Assets\Scripts\MoveLeft.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
