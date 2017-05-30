@@ -22,12 +22,14 @@ namespace OverTheWall.EnemyController
         private float AttackRange;
         private float AttackDamage;
         private float AttackCooldown;
+        private float CurrentHealth = 1000;
         private string Name;
         private Animator animator;
 
         private RectTransform enemyRect;
         private bool canAttack = true;
         private CastleController castle;
+        private bool IsDead = false;
 
         public void Initialize(Enemy_Type EnemyType, float EnemyHealth, float MovementSpeed, float AttackSpeed, float AttackRange, float AttackDamage, float AttackCooldown)
         {
@@ -38,6 +40,7 @@ namespace OverTheWall.EnemyController
             this.AttackRange = AttackRange;
             this.AttackDamage = AttackDamage;
             this.AttackCooldown = AttackCooldown;
+            this.CurrentHealth  = EnemyHealth;
 
             animator = new Animator();
 
@@ -67,6 +70,11 @@ namespace OverTheWall.EnemyController
             {
                 Move();
             }
+        }
+
+        public bool IsEnemyDead()
+        {
+            return IsDead;
         }
 
         private void Move()
@@ -116,9 +124,32 @@ namespace OverTheWall.EnemyController
             canAttack = true;
         }
 
-        public virtual void Die()
+        public void OnHit(float damage)
         {
+            CurrentHealth -= damage;
 
+            if (CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+
+                IsDead = true;
+            }
+                
+            
+            //UpdateHealthBar();
+        }
+
+        void UpdateHealthBar()
+        {
+            float healthPercentage = CurrentHealth / EnemyHealth;
+            //float newSizeDelta = healthPercentage * healthBar.sizeDelta.x;
+
+            //healthBar.sizeDelta = new Vector2(newSizeDelta, healthBar.sizeDelta.y);
+        }
+
+        public void Die()
+        {
+            //Play Animation
         }
     }
 

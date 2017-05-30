@@ -5,7 +5,7 @@ using OverTheWall.EnemyController;
 
 public class Archer : EnemyController
 {
-    float EnemyHealth = 700;
+    float EnemyHealth = 70;
     float MovementSpeed = 2;
     float AttackSpeed = 1.5f;
     float AttackRange = 10;

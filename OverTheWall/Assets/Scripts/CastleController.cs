@@ -4,15 +4,20 @@ using TouchControlsKit;
 
 public class CastleController : MonoBehaviour
 {
-
-    public Camera mainCamera;
+    private Camera mainCamera;
     public GameObject groundSpawner;
+    public GameObject arrow;
     float castleMovementSpeed = 5.0f;
     private bool moveLeftBtnState;
     private bool moveRightBtnState;
     public RectTransform healthBar;
     private float totalHealth = 1000;
     private float currentHealth = 1000;
+    private float rightSideCastle = 0;
+    private Vector2 rightSideCastleVector2;
+    public RectTransform castleBounds;
+    bool canAttack = true;
+    float AttackCooldown = 2.0f;
 
     private enum Movement
     {
@@ -26,31 +31,43 @@ public class CastleController : MonoBehaviour
     void Start()
     {
         mainCamera = GetComponent<Camera>();
+        castleBounds = GetComponent<RectTransform>();
+
+        rightSideCastle = transform.position.x + (castleBounds.sizeDelta.x / 2);
+
+        rightSideCastleVector2 = new Vector2(rightSideCastle, transform.position.y);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (UsedAttackInput() && canAttack)
+        {
+            Attack();
+        }
+    }
 
-        //float horizontal = TCKInput.GetAxis("MovementDPad", EAxisType.Horizontal);
+    bool UsedAttackInput()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            return true;
+        }
 
-        //if (horizontal > 0)
-        //{
-        //    Move(1);
-        //}
-        //else if (horizontal < 0)
-        //{
-        //    Move(-1);
-        //}
+        return false;
+    }
 
-        //if(TCKInput.GetAction("Move_Right", EActionEvent.Down))
-        //{
-        //    Move(1);
-        //}
-        //else if (TCKInput.GetAction("Move_Left", EActionEvent.Down))
-        //{
-        //    Move(-1);
-        //}
+    void Attack()
+    {
+        canAttack = false;
+
+        StartCoroutine(AttackRoutine());
+
+        var arrowInstance = Instantiate(arrow, new Vector3(rightSideCastleVector2.x, rightSideCastleVector2.y, transform.position.z), new Quaternion()).GetComponent<Arrow>();
+
+        Vector2 cursorInWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        arrowInstance.InitializeArrow(rightSideCastleVector2, new Vector2(cursorInWorldPos.x, cursorInWorldPos.y), 30);
     }
 
     void CheckMovement()
@@ -78,9 +95,6 @@ public class CastleController : MonoBehaviour
     }
 
 
-
-
-
     //======================================NEW===============================
 
     public void OnHit(float damage)
@@ -101,7 +115,39 @@ public class CastleController : MonoBehaviour
         healthBar.sizeDelta = new Vector2(newSizeDelta, healthBar.sizeDelta.y);
     }
 
+    private IEnumerator AttackRoutine()
+    {
+        yield return new WaitForSeconds(AttackCooldown);
+
+        canAttack = true;
+    }
+
+    void ShootProjectile()
+    {
+
+    }
+
 }
+
+//float horizontal = TCKInput.GetAxis("MovementDPad", EAxisType.Horizontal);
+
+//if (horizontal > 0)
+//{
+//    Move(1);
+//}
+//else if (horizontal < 0)
+//{
+//    Move(-1);
+//}
+
+//if(TCKInput.GetAction("Move_Right", EActionEvent.Down))
+//{
+//    Move(1);
+//}
+//else if (TCKInput.GetAction("Move_Left", EActionEvent.Down))
+//{
+//    Move(-1);
+//}
 
 
 //void OnLeftButtonTouchDown()
