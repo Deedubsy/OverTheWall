@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TouchControlsKit;
+using OverTheWall.Enums;
+using OverTheWall.Projectile;
 
 public class CastleController : MonoBehaviour
 {
@@ -17,14 +19,7 @@ public class CastleController : MonoBehaviour
     private Vector2 rightSideCastleVector2;
     public RectTransform castleBounds;
     bool canAttack = true;
-    float AttackCooldown = 2.0f;
-
-    private enum Movement
-    {
-        Left,
-        Right,
-        Stationary
-    }
+    float AttackCooldown = 0.5f;
 
     Movement movement = Movement.Stationary;
 
@@ -61,13 +56,11 @@ public class CastleController : MonoBehaviour
     {
         canAttack = false;
 
-        StartCoroutine(AttackRoutine());
-
-        var arrowInstance = Instantiate(arrow, new Vector3(rightSideCastleVector2.x, rightSideCastleVector2.y, transform.position.z), new Quaternion()).GetComponent<Arrow>();
-
         Vector2 cursorInWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        arrowInstance.InitializeArrow(rightSideCastleVector2, new Vector2(cursorInWorldPos.x, cursorInWorldPos.y), 30);
+        ProjectileManager.AddProjectile(ProjectileType.Arrow, rightSideCastleVector2, new Vector2(cursorInWorldPos.x, cursorInWorldPos.y), 30, 5, ProjectileShotFrom.Player, ProjectilCurveType.Straight);
+
+        StartCoroutine(AttackRoutine());
     }
 
     void CheckMovement()
@@ -104,7 +97,12 @@ public class CastleController : MonoBehaviour
         if (currentHealth <= 0)
             currentHealth = 0;
 
-        UpdateHealthBar();
+        //UpdateHealthBar();
+    }
+
+    public Vector2 GetPosition()
+    {
+        return transform.position;
     }
 
     void UpdateHealthBar()
@@ -121,12 +119,6 @@ public class CastleController : MonoBehaviour
 
         canAttack = true;
     }
-
-    void ShootProjectile()
-    {
-
-    }
-
 }
 
 //float horizontal = TCKInput.GetAxis("MovementDPad", EAxisType.Horizontal);

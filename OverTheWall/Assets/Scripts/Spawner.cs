@@ -2,6 +2,7 @@
 using System.Collections;
 using OverTheWall.EnemyController;
 using System.Collections.Generic;
+using OverTheWall.Enums;
 
 public class Spawner : MonoBehaviour
 {
@@ -13,11 +14,13 @@ public class Spawner : MonoBehaviour
 
     private float spawnerCountdown = 5.0f;
     private float gameTimer = 0.0f;
-    private float countdownMax = 10.0f;
+    private float countdownMax = 3.0f;
     private Vector3 SpawnPosition;
 
     private List<EnemyTypeToStore> enemies;
-    
+    private int maxEnemies = 1;
+    private int currentEnemies = 0;
+
     private class EnemyTypeToStore
     {
         public EnemyTypeToStore() { }
@@ -70,6 +73,7 @@ public class Spawner : MonoBehaviour
             {
                 Destroy(enemies[i].ObjectToStore);
                 enemies.Remove(enemies[i]);
+                currentEnemies--;
             }
         }
     }
@@ -77,27 +81,35 @@ public class Spawner : MonoBehaviour
     public void SpawnRandom()
     {
         EnemyTypeToStore enemyToSpawn = new EnemyTypeToStore();
-        
 
-        switch (GetUnitToSpawn())
+
+        if (currentEnemies < maxEnemies)
         {
-            case Enemy_Type.Sword:
-                enemyToSpawn.ObjectToStore = Instantiate(swordsman, transform.position, new Quaternion());
-                enemyToSpawn.EnemyType = Enemy_Type.Sword;
-                break;
-            case Enemy_Type.SwordAndShield:
-                enemyToSpawn.ObjectToStore = Instantiate(swordAndShieldsman, transform.position, new Quaternion());                
-                enemyToSpawn.EnemyType = Enemy_Type.SwordAndShield;
-                break;
-            case Enemy_Type.Archer:
-                enemyToSpawn.ObjectToStore = Instantiate(archer, transform.position, new Quaternion());
-                enemyToSpawn.EnemyType = Enemy_Type.Archer;
-                break;
-            default:
-                break;
-        }
+            enemyToSpawn.ObjectToStore = Instantiate(archer, transform.position, new Quaternion());
+            enemyToSpawn.EnemyType = Enemy_Type.Archer;
+            
+            //switch (GetUnitToSpawn())
+            //{
+            //    case Enemy_Type.Sword:
+            //        enemyToSpawn.ObjectToStore = Instantiate(swordsman, transform.position, new Quaternion());
+            //        enemyToSpawn.EnemyType = Enemy_Type.Sword;
+            //        break;
+            //    case Enemy_Type.SwordAndShield:
+            //        enemyToSpawn.ObjectToStore = Instantiate(swordAndShieldsman, transform.position, new Quaternion());                
+            //        enemyToSpawn.EnemyType = Enemy_Type.SwordAndShield;
+            //        break;
+            //    case Enemy_Type.Archer:
+            //        enemyToSpawn.ObjectToStore = Instantiate(archer, transform.position, new Quaternion());
+            //        enemyToSpawn.EnemyType = Enemy_Type.Archer;
+            //        break;
+            //    default:
+            //        break;
+            //}
 
-        enemies.Add(new EnemyTypeToStore(enemyToSpawn.ObjectToStore, enemyToSpawn.EnemyType));
+            enemies.Add(new EnemyTypeToStore(enemyToSpawn.ObjectToStore, enemyToSpawn.EnemyType));
+
+            currentEnemies++;
+        }
     }
 
     private Enemy_Type GetUnitToSpawn()

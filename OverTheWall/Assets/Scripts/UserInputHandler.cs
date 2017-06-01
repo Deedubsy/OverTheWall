@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class UserInputHandler : MonoBehaviour
 {
-    Camera camera;
+    private Camera camera;
 
     public List<GameObject> touchList = new List<GameObject>();
     private GameObject[] touchesOld;
@@ -12,7 +12,7 @@ public class UserInputHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        camera = GetComponent<Camera>();
+        camera = FindObjectOfType<Camera>();
     }
 
     // Update is called once per frame
