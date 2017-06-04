@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Projectiles\ProjectileManager.cs" />
     <Compile Include="Assets\Scripts\Shared\Enums.cs" />
+    <Compile Include="Assets\Scripts\Shared\SharedFunctions.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\TouchScript.cs" />
     <Compile Include="Assets\Scripts\UserInputHandler.cs" />

@@ -3,6 +3,7 @@ using System.Collections;
 using TouchControlsKit;
 using OverTheWall.Enums;
 using OverTheWall.Projectile;
+using OverTheWall.SharedFunctions;
 
 public class CastleController : MonoBehaviour
 {
@@ -23,6 +24,14 @@ public class CastleController : MonoBehaviour
 
     Movement movement = Movement.Stationary;
 
+    private Vector2 startDragPosition = Vector2.zero;
+    private Vector2 endDragPosition = Vector2.zero;
+    private float currentTimeBetweenDrag = 0;
+    private float totalTimeBetweenDrag = 0;
+    private float angle = 0;
+    private bool dragging = false;
+    private float distanceBetweenDrags;
+
     void Start()
     {
         mainCamera = GetComponent<Camera>();
@@ -30,22 +39,38 @@ public class CastleController : MonoBehaviour
 
         rightSideCastle = transform.position.x + (castleBounds.sizeDelta.x / 2);
 
-        rightSideCastleVector2 = new Vector2(rightSideCastle, transform.position.y);
+        rightSideCastleVector2 = new Vector2(rightSideCastle , transform.position.y);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (UsedAttackInput() && canAttack)
         {
             Attack();
         }
+
+        if(dragging)
+        {
+            currentTimeBetweenDrag += Time.deltaTime;
+        }
     }
 
     bool UsedAttackInput()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
+            startDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dragging = true;
+        }
+        else if(Input.GetMouseButtonUp(0) && dragging)
+        {
+            endDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dragging = false;
+
+            totalTimeBetweenDrag = currentTimeBetweenDrag;
+            currentTimeBetweenDrag = 0;
+            angle = Vector2.Angle(endDragPosition, startDragPosition);
+
             return true;
         }
 
@@ -54,14 +79,17 @@ public class CastleController : MonoBehaviour
 
     void Attack()
     {
-        canAttack = false;
-
         Vector2 cursorInWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        ProjectileManager.AddProjectile(ProjectileType.Arrow, rightSideCastleVector2, new Vector2(cursorInWorldPos.x, cursorInWorldPos.y), 30, 5, ProjectileShotFrom.Player, ProjectilCurveType.Straight);
+        float speed = SharedFunctions.CalculateSpeed(startDragPosition, endDragPosition, totalTimeBetweenDrag);
 
-        StartCoroutine(AttackRoutine());
+        ProjectileManager.AddPlayerProjectile(ProjectileType.Arrow, rightSideCastleVector2, endDragPosition, angle, speed, 5);
+
+        totalTimeBetweenDrag = 0;
+
+        //StartCoroutine(AttackRoutine());
     }
+
 
     void CheckMovement()
     {

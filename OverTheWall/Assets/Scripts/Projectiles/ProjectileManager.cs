@@ -39,7 +39,19 @@ public class ProjectileManager : MonoBehaviour
 
         projectileToSpawn.ObjectToStore = Instantiate(GetObjectToShoot(Type), new Vector3(sp.x, sp.y, 0), new Quaternion());
         projectileToSpawn.ProjectileController = projectileToSpawn.ObjectToStore.GetComponent<Projectile>();
-        projectileToSpawn.ProjectileController.Initialize(Type, sp, tp, speed, damage, shotBy, CurveType);
+        projectileToSpawn.ProjectileController.InitializeProjectile(Type, sp, tp, speed, damage, shotBy, CurveType);
+
+        listOfProjectiles.Add(projectileToSpawn);
+    }
+
+    public static void AddPlayerProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float angle, float speed, float damage)
+    {
+        ProjectilesToStore projectileToSpawn = new ProjectilesToStore();
+
+        projectileToSpawn.ObjectToStore = Instantiate(GetObjectToShoot(Type), new Vector3(sp.x, sp.y, 0), new Quaternion());
+        projectileToSpawn.ProjectileController = projectileToSpawn.ObjectToStore.GetComponent<Projectile>();
+
+        projectileToSpawn.ProjectileController.InitializePlayerProjectile(Type, sp, tp, angle, speed, damage);
 
         listOfProjectiles.Add(projectileToSpawn);
     }

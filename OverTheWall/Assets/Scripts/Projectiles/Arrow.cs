@@ -8,21 +8,26 @@ using UnityEngine;
 public class Arrow : Projectile
 {
     private float damage = 5;
+    private Rigidbody2D rigidBody2d;
+    private ProjectileShotFrom shotBy;
 
-    public override void Initialize(ProjectileType Type, Vector2 sp, Vector2 tp, float speed, float damage, ProjectileShotFrom shotBy, ProjectilCurveType CurveType)
+    public void Initialize(ProjectileType Type, Vector2 sp, Vector2 tp, float speed, float damage, ProjectileShotFrom shotBy, ProjectilCurveType CurveType)
     {
-        base.Initialize(Type, sp, tp, speed, damage, shotBy, CurveType);
+        this.shotBy = shotBy;
+        base.InitializeProjectile(Type, sp, tp, speed, damage, shotBy, CurveType);
     }
-
-    //public override void Initialize(Vector2 sp, Vector2 tp, float speed, ProjectileShotFrom shotBy)
-    //{
-    //    base.Initialize(ProjectileType.Arrow, sp, tp, 30, damage, shotBy, ProjectilCurveType.Straight);
-    //}
-
-    // Use this for initialization
+    
     void Start()
     {
+        rigidBody2d = GetComponent<Rigidbody2D>();
 
+        if (shotBy == ProjectileShotFrom.Player)
+            SetPlayerProjectileVelocity();
+    }
+
+    void SetPlayerProjectileVelocity()
+    {
+        base.SetPlayerProjectileForce(rigidBody2d);
     }
 
     private void Update()
