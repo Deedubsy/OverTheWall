@@ -49,7 +49,7 @@ public class CastleController : MonoBehaviour
             Attack();
         }
 
-        if(dragging)
+        if (dragging)
         {
             currentTimeBetweenDrag += Time.deltaTime;
         }

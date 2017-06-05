@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace OverTheWall.Enums
 {
     public enum Enemy_Type
@@ -39,6 +40,14 @@ namespace OverTheWall.Enums
     {
         Player = 0,
         Enemy = 1,
+    }
+
+    public enum TurretType
+    {
+        BigBow = 0,
+        Catapult = 1,
+        RepeaterCrossbow = 2,
+        ArcherGroup = 3
     }
 }
 
