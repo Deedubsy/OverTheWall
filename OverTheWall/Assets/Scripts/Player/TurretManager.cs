@@ -31,6 +31,11 @@ public class TurretManager : MonoBehaviour
     void Start()
     {
         SelectCurrentTurret(TurretType.BigBow);
+
+        float width = Screen.width / 3;
+        float height = Screen.height / 2;
+
+        TurretSwitchArea = new Rect(0, 0, width, height);
     }
 
     // Update is called once per frame
@@ -41,14 +46,14 @@ public class TurretManager : MonoBehaviour
         {
             if (InTurretSwitchSpace() || dragStartedInSwitchSpace)
             {
-                if (UsedAttackInput() && canSwitchTurrets)
+                if (UpdateInput() && canSwitchTurrets)
                 {
                     SwitchTurret();
                 }
             }
             else
             {
-                if (UsedAttackInput() && canAttack)
+                if (UpdateInput() && canAttack)
                 {
                     Attack();
                 }
@@ -61,7 +66,7 @@ public class TurretManager : MonoBehaviour
         }
     }
 
-    bool UsedAttackInput()
+    bool UpdateInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -109,6 +114,8 @@ public class TurretManager : MonoBehaviour
 
         if (TurretSwitchArea.Contains(pointToCheck))
         {
+            dragStartedInSwitchSpace = true;
+
             return true;
         }
 
