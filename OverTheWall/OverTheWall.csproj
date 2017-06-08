@@ -93,6 +93,10 @@
     <Compile Include="Assets\Scripts\Player\CastleController.cs" />
     <Compile Include="Assets\Scripts\Player\TurrentBase.cs" />
     <Compile Include="Assets\Scripts\Player\TurretManager.cs" />
+    <Compile Include="Assets\Scripts\Player\Turrets\ArchersTurret.cs" />
+    <Compile Include="Assets\Scripts\Player\Turrets\ArrowTurret.cs" />
+    <Compile Include="Assets\Scripts\Player\Turrets\CatapultTurret.cs" />
+    <Compile Include="Assets\Scripts\Player\Turrets\RepeaterCrossbow.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Arrow.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Projectiles\ProjectileManager.cs" />

@@ -15,20 +15,22 @@ namespace OverTheWall.TurretBase
         private ProjectileType projectileType;
 
         public void InitializeTurret(TurretType turretType, Projectile.Projectile projectile, float cooldown,
-            float damage, ProjectileType projectileType)
+            float damage, ProjectileType projectileType, Vector2 launchPosition)
         {
             this.turretType = turretType;
             this.projectile = projectile;
             this.cooldown = cooldown;
             this.damage = damage;
-            this.launchPosition = Vector2.zero;
+            this.launchPosition = new Vector2(transform.position.x + 2, transform.position.y);
             this.projectileType = projectileType;
+
+            gameObject.SetActive(false);
         }
 
         // Use this for initialization
         void Start()
         {
-
+            gameObject.SetActive(false);
         }
 
         // Update is called once per frame
@@ -40,6 +42,16 @@ namespace OverTheWall.TurretBase
         public void AddProjectile(Vector2 endDragPosition, float angle, float speed)
         {
             ProjectileManager.AddPlayerProjectile(projectileType, launchPosition, endDragPosition, angle, speed, damage);
+        }
+        
+        public void TurretSelected()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void TurretChanged()
+        {
+            gameObject.SetActive(false);
         }
 
         public float GetCooldown()

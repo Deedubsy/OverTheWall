@@ -44,15 +44,15 @@ public class CastleController : MonoBehaviour
 
     void Update()
     {
-        if (UsedAttackInput() && canAttack)
-        {
-            Attack();
-        }
+        //if (UsedAttackInput() && canAttack)
+        //{
+        //    Attack();
+        //}
 
-        if (dragging)
-        {
-            currentTimeBetweenDrag += Time.deltaTime;
-        }
+        //if (dragging)
+        //{
+        //    currentTimeBetweenDrag += Time.deltaTime;
+        //}
     }
 
     bool UsedAttackInput()

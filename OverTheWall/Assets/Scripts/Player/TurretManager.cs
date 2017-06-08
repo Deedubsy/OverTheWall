@@ -30,10 +30,11 @@ public class TurretManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        currentTurret = arrowTurret;
         SelectCurrentTurret(TurretType.BigBow);
 
         float width = Screen.width / 3;
-        float height = Screen.height / 2;
+        float height = Screen.height / 3;
 
         TurretSwitchArea = new Rect(0, 0, width, height);
     }
@@ -58,6 +59,12 @@ public class TurretManager : MonoBehaviour
                     Attack();
                 }
             }
+        }
+
+        //For debug only
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            SwitchTurret();
         }
 
         if (dragging)
@@ -101,11 +108,14 @@ public class TurretManager : MonoBehaviour
 
     bool InTurretSwitchSpace()
     {
+        //return false;
+
+
         Vector2 pointToCheck;
 
         if (Input.GetMouseButtonDown(0))
         {
-            pointToCheck = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            pointToCheck = Camera.main.WorldToScreenPoint(Input.mousePosition);
         }
         else
         {
@@ -147,6 +157,8 @@ public class TurretManager : MonoBehaviour
         currentTurretType = turretType;
         currentTurretTypeId = (int)turretType;
 
+        currentTurret.TurretChanged();
+
         switch (turretType)
         {
             case TurretType.BigBow:
@@ -164,6 +176,8 @@ public class TurretManager : MonoBehaviour
             default:
                 break;
         }
+
+        currentTurret.TurretSelected();
     }
 
     private IEnumerator AttackRoutine()
