@@ -7,20 +7,27 @@ namespace OverTheWall.TurretBase
 {
     public class TurrentBase : MonoBehaviour
     {
+        //PUBLIC
+
+
+        //PRIVATE
+        private float Cooldown;
+        private float AdditionalDamage;
+        private int TurretLevel;
+
         private TurretType turretType;
         private Projectile.Projectile projectile;
-        private float cooldown;
-        private float damage;
         private Vector2 launchPosition;
         private ProjectileType projectileType;
 
+        // Call from inherited class
         public void InitializeTurret(TurretType turretType, Projectile.Projectile projectile, float cooldown,
-            float damage, ProjectileType projectileType, Vector2 launchPosition)
+            float additionalDamage, ProjectileType projectileType, Vector2 launchPosition)
         {
             this.turretType = turretType;
             this.projectile = projectile;
-            this.cooldown = cooldown;
-            this.damage = damage;
+            this.Cooldown = cooldown;
+            this.AdditionalDamage = additionalDamage;
             this.launchPosition = new Vector2(transform.position.x + 2, transform.position.y);
             this.projectileType = projectileType;
 
@@ -41,9 +48,9 @@ namespace OverTheWall.TurretBase
 
         public void AddProjectile(Vector2 endDragPosition, float angle, float speed)
         {
-            ProjectileManager.AddPlayerProjectile(projectileType, launchPosition, endDragPosition, angle, speed, damage);
+            ProjectileManager.AddPlayerProjectile(projectileType, launchPosition, endDragPosition, angle, speed, AdditionalDamage);
         }
-        
+
         public void TurretSelected()
         {
             gameObject.SetActive(true);
@@ -56,7 +63,7 @@ namespace OverTheWall.TurretBase
 
         public float GetCooldown()
         {
-            return cooldown;
+            return Cooldown;
         }
     }
 }

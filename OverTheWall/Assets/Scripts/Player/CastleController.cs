@@ -10,13 +10,15 @@ public class CastleController : MonoBehaviour
     private Camera mainCamera;
     public GameObject groundSpawner;
     public GameObject arrow;
-    float castleMovementSpeed = 5.0f;
     private bool moveLeftBtnState;
     private bool moveRightBtnState;
     public RectTransform healthBar;
+
     private float totalHealth = 1000;
     private float currentHealth = 1000;
     private float rightSideCastle = 0;
+    private float castleMovementSpeed = 5.0f;
+
     private Vector2 rightSideCastleVector2;
     public RectTransform castleBounds;
     bool canAttack = true;
@@ -44,52 +46,8 @@ public class CastleController : MonoBehaviour
 
     void Update()
     {
-        //if (UsedAttackInput() && canAttack)
-        //{
-        //    Attack();
-        //}
-
-        //if (dragging)
-        //{
-        //    currentTimeBetweenDrag += Time.deltaTime;
-        //}
+        
     }
-
-    bool UsedAttackInput()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            startDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            dragging = true;
-        }
-        else if(Input.GetMouseButtonUp(0) && dragging)
-        {
-            endDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            dragging = false;
-
-            totalTimeBetweenDrag = currentTimeBetweenDrag;
-            currentTimeBetweenDrag = 0;
-            angle = Vector2.Angle(endDragPosition, startDragPosition);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    void Attack()
-    {
-        Vector2 cursorInWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        float speed = SharedFunctions.CalculateSpeed(startDragPosition, endDragPosition, totalTimeBetweenDrag);
-
-        ProjectileManager.AddPlayerProjectile(ProjectileType.Arrow, rightSideCastleVector2, endDragPosition, angle, speed, 5);
-
-        totalTimeBetweenDrag = 0;
-
-        //StartCoroutine(AttackRoutine());
-    }
-
 
     void CheckMovement()
     {

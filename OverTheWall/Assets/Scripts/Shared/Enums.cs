@@ -26,7 +26,8 @@ namespace OverTheWall.Enums
 
     public enum ProjectileType
     {
-        Arrow = 0
+        Arrow = 0,
+        Boulder = 1
     }
 
     public enum ProjectilCurveType

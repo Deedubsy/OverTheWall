@@ -33,16 +33,32 @@ public class TurretManager : MonoBehaviour
         currentTurret = arrowTurret;
         SelectCurrentTurret(TurretType.BigBow);
 
-        float width = Screen.width / 3;
-        float height = Screen.height / 3;
+        Bounds cameraBounds = SharedFunctions.OrthographicBounds(FindObjectOfType<Camera>());
 
-        TurretSwitchArea = new Rect(0, 0, width, height);
+        float width = cameraBounds.size.x;
+        float height = cameraBounds.size.y;
+
+        //TurretSwitchArea = new Rect(cameraBounds.extents.x - (cameraBounds.size.x / 2),
+        //    cameraBounds.extents.y - (cameraBounds.size.y / 2),
+        //    width,
+        //    height);
+
+        TurretSwitchArea = new Rect(0,
+            0,
+            width,
+            height);
+
+
+        DrawRectangle(TurretSwitchArea);
     }
 
     // Update is called once per frame
 
     void Update()
     {
+        DrawRectangle(TurretSwitchArea);
+
+
         if (HasInputStarted())
         {
             if (InTurretSwitchSpace() || dragStartedInSwitchSpace)
@@ -62,7 +78,7 @@ public class TurretManager : MonoBehaviour
         }
 
         //For debug only
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             SwitchTurret();
         }
@@ -108,9 +124,6 @@ public class TurretManager : MonoBehaviour
 
     bool InTurretSwitchSpace()
     {
-        //return false;
-
-
         Vector2 pointToCheck;
 
         if (Input.GetMouseButtonDown(0))
@@ -185,5 +198,25 @@ public class TurretManager : MonoBehaviour
         yield return new WaitForSeconds(currentTurret.GetCooldown());
 
         canAttack = true;
+    }
+
+    public Material material;
+
+    void DrawRectangle(Rect position)
+    {
+
+        Vector3 topLeft = new Vector3(position.x, position.y);
+        Vector3 topRight = new Vector3(position.x + position.width, position.y);
+        Vector3 bottomLeft = new Vector3(position.x, position.y + position.height);
+        Vector3 bottomRight = new Vector3(position.x + position.width, position.y + position.height);
+
+
+
+        Debug.DrawLine(topLeft, topRight, Color.blue);
+        Debug.DrawLine(topLeft, bottomLeft, Color.blue);
+        Debug.DrawLine(bottomLeft, bottomRight, Color.blue);
+        Debug.DrawLine(topRight, bottomRight, Color.blue);
+
+
     }
 }

@@ -14,16 +14,21 @@ namespace OverTheWall.Projectile
         private ProjectileShotFrom ShotBy { get; set; }
         private Vector2 StartingPosition { get; set; }
         private Vector2 TargetPosition { get; set; }
-        private float Speed { get; set; }
-        private float Damage { get; set; }
         private Rigidbody2D rigidBody2d;
+
         private bool canCauseDamage = true;
         private bool IsDead = false;
-        private float firingAngle = 45;
-        private float elapse_time = 0;
-        private float gravity = 9.8f;
-        private float angle = 0.0f;
-        private float velocity = 0.0f;
+
+        //Turret Stats
+        private float Speed { get; set; }
+        private float BaseDamage { get; set; }
+        private float AdditionalDamage;
+        private float FiringAngle = 45;
+        private float ElapsedTime = 0;
+        private float Gravity = 9.8f;
+        private float Angle = 0.0f;
+        private float Velocity = 0.0f;
+        private float Cooldown = 0.0f;
 
 
         float Vx = 0;
@@ -35,14 +40,14 @@ namespace OverTheWall.Projectile
 
         }
 
-        public void InitializeProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float speed, float damage, ProjectileShotFrom shotBy, ProjectilCurveType CurveType)
+        public void InitializeProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float speed, float baseDamage, ProjectileShotFrom shotBy, ProjectilCurveType CurveType)
         {
             this.Type = Type;
             this.CurveType = CurveType;
             this.StartingPosition = sp;
             this.TargetPosition = tp;
             this.Speed = speed;
-            this.Damage = damage;
+            this.BaseDamage = baseDamage;
             this.ShotBy = shotBy;
 
             RotateTowardsObject();
@@ -50,16 +55,22 @@ namespace OverTheWall.Projectile
             CalculateParabolicTrajetory();
         }
 
-        public void InitializePlayerProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float angle, float speed, float damage)
+        public void InitializePlayerProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float angle, float speed, float AdditionalDamage)
         {
             this.Type = Type;
             this.CurveType = CurveType;
             this.StartingPosition = sp;
             this.TargetPosition = tp;
             this.Speed = speed;
-            this.Damage = damage;
             this.ShotBy = ProjectileShotFrom.Player;
-            this.angle = angle;
+            this.Angle = angle;
+            this.AdditionalDamage = AdditionalDamage;
+        }
+
+        public void InitializePrivateVariables(float cooldown, float damage)
+        {
+            this.BaseDamage = damage;
+            this.Cooldown = cooldown;
         }
 
         public void SetPlayerProjectileForce(Rigidbody2D rb2d = null)
@@ -133,23 +144,13 @@ namespace OverTheWall.Projectile
 
         private void UpdateProjectilePosition()
         {
-            transform.Translate(Vx * Time.deltaTime, (Vy - (Physics2D.gravity.magnitude * elapse_time)) * Time.deltaTime, 0);
+            transform.Translate(Vx * Time.deltaTime, (Vy - (Physics2D.gravity.magnitude * ElapsedTime)) * Time.deltaTime, 0);
 
-            elapse_time += Time.deltaTime;
+            ElapsedTime += Time.deltaTime;
 
             //transform.Translate()
         }
-
-        //private void CalculateParabolicTrajetory()
-        //{
-        //    float g = 9.81f; // gravity
-        //    float v = 40; // velocity
-        //    float x = 42; // target x
-        //    float y = 0; // target y
-        //    velocity = (v * v * v * v) - g * (g * (x * x) + 2 * y * (v * v)); //substitution
-        //    float o = Mathf.Atan(((v * v) + Mathf.Sqrt(velocity)) / (g * x)); // launch angle
-        //}
-
+        
         private void CalculateParabolicTrajetory()
         {
             // Short delay added before Projectile is thrown
@@ -162,11 +163,11 @@ namespace OverTheWall.Projectile
             float target_Distance = Vector3.Distance(transform.position, TargetPosition);
 
             // Calculate the velocity needed to throw the object to the target at specified angle.
-            float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+            float projectile_Velocity = target_Distance / (Mathf.Sin(2 * FiringAngle * Mathf.Deg2Rad) / Gravity);
 
             // Extract the X  Y componenent of the velocity
-            Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-            Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+            Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(FiringAngle * Mathf.Deg2Rad);
+            Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(FiringAngle * Mathf.Deg2Rad);
 
             // Calculate flight time.
             float flightDuration = target_Distance / Vx;
@@ -175,8 +176,8 @@ namespace OverTheWall.Projectile
             //Projectile.rotation = Quaternion.LookRotation(TargetPosition - Projectile.position);
 
             //transform.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
-            transform.Translate(Vx * Time.deltaTime, (Vy - (gravity * elapse_time)) * Time.deltaTime, 0);
-            elapse_time += Time.deltaTime;
+            transform.Translate(Vx * Time.deltaTime, (Vy - (Gravity * ElapsedTime)) * Time.deltaTime, 0);
+            ElapsedTime += Time.deltaTime;
 
             //while (elapse_time < flightDuration)
             //{
@@ -185,42 +186,6 @@ namespace OverTheWall.Projectile
             //    yield return null;
             //}
         }
-
-        //IEnumerator SimulateProjectile()
-        //{
-        //    // Short delay added before Projectile is thrown
-        //    yield return new WaitForSeconds(1.5f);
-
-        //    // Move projectile to the position of throwing object + add some offset if needed.
-        //    transform.position = transform.position + new Vector3(0, 0.0f, 0);
-
-        //    // Calculate distance to target
-        //    float target_Distance = Vector3.Distance(transform.position, TargetPosition);
-
-        //    // Calculate the velocity needed to throw the object to the target at specified angle.
-        //    float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / Physics2D.gravity.magnitude);
-
-        //    // Extract the X  Y componenent of the velocity
-        //    float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-        //    float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
-
-        //    // Calculate flight time.
-        //    float flightDuration = target_Distance / Vx;
-
-        //    // Rotate projectile to face the target.
-        //    //Projectile.rotation = Quaternion.LookRotation(TargetPosition - Projectile.position);
-
-
-
-        //    while (elapse_time < flightDuration)
-        //    {
-        //        transform.Translate(0, (Vy - (Physics2D.gravity.magnitude * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
-
-        //        elapse_time += Time.deltaTime;
-
-        //        yield return null;
-        //    }
-        //}
 
         private Vector2 GetParabola()
         {
@@ -298,6 +263,11 @@ namespace OverTheWall.Projectile
             }
         }
 
+        private float GetDamage()
+        {
+            return BaseDamage + AdditionalDamage;
+        }
+
         private void ShotByPlayer(Collider2D collision)
         {
             if (collision.gameObject != null)
@@ -308,7 +278,7 @@ namespace OverTheWall.Projectile
                     {
                         EnemyController.EnemyController enemy = collision.gameObject.GetComponent<EnemyController.EnemyController>();
 
-                        enemy.OnHit(Damage);
+                        enemy.OnHit(GetDamage());
 
                         canCauseDamage = false;
 
@@ -334,7 +304,7 @@ namespace OverTheWall.Projectile
 
                         CastleController enemy = collision.gameObject.GetComponent<CastleController>();
 
-                        enemy.OnHit(Damage);
+                        enemy.OnHit(GetDamage());
 
                         canCauseDamage = false;
                     }

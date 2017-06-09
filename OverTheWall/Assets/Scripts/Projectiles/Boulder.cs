@@ -1,14 +1,13 @@
-﻿using OverTheWall.EnemyController;
-using OverTheWall.Enums;
+﻿using OverTheWall.Enums;
 using OverTheWall.Projectile;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : Projectile
+public class Boulder : Projectile
 {
-    private float damage = 5;
-    private float speed = 2;
+    private float damage = 50;
+    private float speed = 5;
     private Rigidbody2D rigidBody2d;
     private ProjectileShotFrom shotBy;
 
@@ -17,8 +16,9 @@ public class Arrow : Projectile
         this.shotBy = shotBy;
         base.InitializeProjectile(Type, sp, tp, speed, damage, shotBy, CurveType);
     }
-    
-    void Start()
+
+    // Use this for initialization
+    void Start ()
     {
         rigidBody2d = GetComponent<Rigidbody2D>();
 

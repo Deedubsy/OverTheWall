@@ -9,6 +9,7 @@ using UnityEngine;
 public class ProjectileManager : MonoBehaviour
 {
     private static Projectile arrow;
+    private static Projectile boulder;
 
     private static List<ProjectilesToStore> listOfProjectiles { get; set; }
 
@@ -30,6 +31,7 @@ public class ProjectileManager : MonoBehaviour
     void Start()
     {
         arrow = FindObjectOfType<Arrow>();
+        boulder = FindObjectOfType<Boulder>();
         listOfProjectiles = new List<ProjectilesToStore>();
     }
 
@@ -44,14 +46,14 @@ public class ProjectileManager : MonoBehaviour
         listOfProjectiles.Add(projectileToSpawn);
     }
 
-    public static void AddPlayerProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float angle, float speed, float damage)
+    public static void AddPlayerProjectile(ProjectileType Type, Vector2 sp, Vector2 tp, float angle, float speed, float additionalDamage)
     {
         ProjectilesToStore projectileToSpawn = new ProjectilesToStore();
 
         projectileToSpawn.ObjectToStore = Instantiate(GetObjectToShoot(Type), new Vector3(sp.x, sp.y, 0), new Quaternion());
         projectileToSpawn.ProjectileController = projectileToSpawn.ObjectToStore.GetComponent<Projectile>();
 
-        projectileToSpawn.ProjectileController.InitializePlayerProjectile(Type, sp, tp, angle, speed, damage);
+        projectileToSpawn.ProjectileController.InitializePlayerProjectile(Type, sp, tp, angle, speed, additionalDamage);
 
         listOfProjectiles.Add(projectileToSpawn);
     }
@@ -62,6 +64,8 @@ public class ProjectileManager : MonoBehaviour
         {
             case ProjectileType.Arrow:
                 return arrow;
+            case ProjectileType.Boulder:
+                return boulder;
             default:
                 break;
         }
