@@ -51,7 +51,12 @@ namespace OverTheWall.TurretBase
             ProjectileManager.AddPlayerProjectile(projectileType, launchPosition, endDragPosition, angle, speed, AdditionalDamage);
         }
 
-        public void TurretSelected()
+        public bool IsActive()
+        {
+            return gameObject.activeSelf;
+        }
+
+        public void SetActive()
         {
             gameObject.SetActive(true);
         }

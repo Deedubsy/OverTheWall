@@ -38,15 +38,15 @@ public class TurretManager : MonoBehaviour
         float width = cameraBounds.size.x;
         float height = cameraBounds.size.y;
 
-        //TurretSwitchArea = new Rect(cameraBounds.extents.x - (cameraBounds.size.x / 2),
-        //    cameraBounds.extents.y - (cameraBounds.size.y / 2),
-        //    width,
-        //    height);
-
-        TurretSwitchArea = new Rect(0,
-            0,
+        TurretSwitchArea = new Rect(cameraBounds.extents.x - (cameraBounds.size.x / 2),
+            cameraBounds.extents.y - (cameraBounds.size.y / 2),
             width,
             height);
+
+        //TurretSwitchArea = new Rect(0,
+        //    0,
+        //    width,
+        //    height);
 
 
         DrawRectangle(TurretSwitchArea);
@@ -57,7 +57,6 @@ public class TurretManager : MonoBehaviour
     void Update()
     {
         DrawRectangle(TurretSwitchArea);
-
 
         if (HasInputStarted())
         {
@@ -76,6 +75,9 @@ public class TurretManager : MonoBehaviour
                 }
             }
         }
+
+        if (!currentTurret.IsActive())
+            currentTurret.SetActive();
 
         //For debug only
         if (Input.GetKeyDown(KeyCode.S))
@@ -190,7 +192,7 @@ public class TurretManager : MonoBehaviour
                 break;
         }
 
-        currentTurret.TurretSelected();
+        currentTurret.SetActive();
     }
 
     private IEnumerator AttackRoutine()

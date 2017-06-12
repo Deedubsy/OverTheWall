@@ -24,7 +24,7 @@ public class RepeaterCrossbow : OverTheWall.TurretBase.TurrentBase
             projectile,
             Cooldown,
             AdditionalDamage,
-            OverTheWall.Enums.ProjectileType.Boulder,
+            OverTheWall.Enums.ProjectileType.Arrow,
             launchPosition);
     }
 
